@@ -4,35 +4,39 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using hotel_santa_ursula_II.Models;
+using hotel_santa_ursula_II.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using hotel_santa_ursula_II.Data;
-using hotel_santa_ursula_II.Models;
 
 namespace hotel_santa_ursula_II.Controllers
 {
-    public class Habitaciones : Controller
+    public class HabitacionesController : Controller
     {
+         private readonly ILogger<HabitacionesController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
-        
-        public Habitaciones(ApplicationDbContext context,  UserManager<IdentityUser> userManager)
+
+        public HabitacionesController(ILogger<HabitacionesController> logger,
+            ApplicationDbContext context,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _logger = logger;
             _userManager = userManager;
         }
-
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult Mostrar()
+       
+        public async Task<IActionResult> Mostrar()
         {
-            var listahabitaciones = _context.habitaciones.ToList();
-            ViewData["message"]="";
-            return View(listahabitaciones);
-             
+            var productos = from o in _context.habitaciones select o;
+            productos = productos.Where(s => s.Estado.Equals(""));
+            return View(await productos.ToListAsync());
         }
         public async Task<IActionResult> Detalles(int? id)
         {
@@ -49,7 +53,7 @@ namespace hotel_santa_ursula_II.Controllers
             if(userID == null){
                 ViewData["Message"] = "Por favor debe loguearse antes de agregar un producto";
                 List<Habitaciones> productos = new List<Habitaciones>();
-                return  View("Index",productos);
+                return  View("Mostrar",productos);
             }else{
                 var producto = await _context.habitaciones.FindAsync(id);
                 Carrito proforma = new Carrito();
@@ -59,7 +63,7 @@ namespace hotel_santa_ursula_II.Controllers
                 proforma.UserID = userID;
                 _context.Add(proforma);
                 await _context.SaveChangesAsync();
-                return  RedirectToAction("Mostrar","Habitaciones");
+                return  RedirectToAction(nameof(Mostrar));
             }
         }
         
