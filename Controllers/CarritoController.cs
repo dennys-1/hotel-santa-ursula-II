@@ -47,8 +47,11 @@ namespace hotel_santa_ursula_II.Controllers
                 return NotFound();
             }
             var proforma = await _context.DataProforma.FindAsync(id);
+            
             _context.DataProforma.Remove(proforma);
             await _context.SaveChangesAsync();
+            
+           
             return RedirectToAction(nameof(Index));
         }
         

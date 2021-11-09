@@ -9,6 +9,8 @@ using hotel_santa_ursula_II.Models;
 using hotel_santa_ursula_II.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using OfficeOpenXml;
+using OfficeOpenXml.Table;
 
 namespace hotel_santa_ursula_II.Controllers
 {
@@ -162,6 +164,24 @@ namespace hotel_santa_ursula_II.Controllers
             return RedirectToAction("Listar");
         }
 /***********************************************************************************************************/
+public IActionResult ExportarExcel()
+            {
+                string excelContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                var citas = _context.habitaciones.AsNoTracking().ToList();
+                using (var libro = new ExcelPackage())
+                    {
+                        var worksheet = libro.Workbook.Worksheets.Add("Citas");
+                        worksheet.Cells["A1"].LoadFromCollection(citas, PrintHeaders: true);
+                        for (var col = 1; col < citas.Count + 1; col++)
+                            {
+                                worksheet.Column(col).AutoFit();
+                            }
+        // Agregar formato de tabla
+        var tabla = worksheet.Tables.Add(new ExcelAddressBase(fromRow: 1, fromCol: 1, toRow: citas.Count + 1, toColumn: 5), "Citas");
+        tabla.ShowHeader = true;
+        tabla.TableStyle = TableStyles.Light6;
+        tabla.ShowTotal = true;
 
+        return File(libro.GetAsByteArray(), excelContentType, "Citas.xlsx");
     }
 }
