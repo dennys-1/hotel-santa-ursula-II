@@ -53,6 +53,7 @@ namespace hotel_santa_ursula_II.Controllers
             pedido.UserID = pago.UserID;
             pedido.Total = pago.MontoTotal;
             pedido.pago = pago;
+            
             pedido.Estado = "PENDIENTE";
             _context.Add(pedido);
 

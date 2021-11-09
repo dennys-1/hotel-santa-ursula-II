@@ -35,7 +35,7 @@ namespace hotel_santa_ursula_II.Controllers
         public async Task<IActionResult> Mostrar()
         {
             var productos = from o in _context.habitaciones select o;
-            productos = productos.Where(s => s.Estado.Equals(""));
+            productos = productos.Where(s => s.Estado.Equals("Disponible"));
             return View(await productos.ToListAsync());
         }
         public async Task<IActionResult> Detalles(int? id)
@@ -61,6 +61,7 @@ namespace hotel_santa_ursula_II.Controllers
                 proforma.Precio = producto.precio;
                 proforma.Quantity = 1;
                 proforma.UserID = userID;
+                proforma.habitacion.Estado="Ocupado";
                 _context.Add(proforma);
                 await _context.SaveChangesAsync();
                 return  RedirectToAction(nameof(Mostrar));
@@ -140,13 +141,8 @@ namespace hotel_santa_ursula_II.Controllers
             }
             return View("Index", objMuestra);
         }
-         public IActionResult Eliminar(int? id)
-        {
-            var etiphab = _context.habitaciones.Find(id);
-            _context.habitaciones.Remove(etiphab);
-            _context.SaveChanges();
-            return RedirectToAction("Listar");
-        }
+        /*********************MOSTRAR TUS HABITACIONES ****************************************/
+         
         [HttpGet]
         public async Task<IActionResult> Mostrar(String Empsearch){
             ViewData["Getemployeedetails"]=Empsearch;
@@ -157,6 +153,15 @@ namespace hotel_santa_ursula_II.Controllers
             return View(await empquery.AsNoTracking().ToListAsync());
 
         }
+/*****************************************ELIMINAR UNA HABITACION ***************************************/
+        [HttpPost]
+        public IActionResult Eliminar(int id) {
+            var habitacion = _context.habitaciones.Find(id);
+            _context.Remove(habitacion);
+            _context.SaveChanges();
+            return RedirectToAction("Listar");
+        }
+/***********************************************************************************************************/
 
     }
 }

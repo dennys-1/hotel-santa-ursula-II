@@ -10,7 +10,7 @@ using hotel_santa_ursula_II.Data;
 namespace hotel_santa_ursula_II.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211108064614_inicial")]
+    [Migration("20211109062214_inicial")]
     partial class inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -298,9 +298,6 @@ namespace hotel_santa_ursula_II.Migrations
                     b.Property<string>("descripcion")
                         .HasColumnType("text");
 
-                    b.Property<int>("idtipo")
-                        .HasColumnType("integer");
-
                     b.Property<int>("nivel")
                         .HasColumnType("integer");
 
@@ -310,7 +307,12 @@ namespace hotel_santa_ursula_II.Migrations
                     b.Property<int>("precio")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("tipoHabitacionid")
+                        .HasColumnType("integer");
+
                     b.HasKey("id");
+
+                    b.HasIndex("tipoHabitacionid");
 
                     b.ToTable("T_habitaciones");
                 });
@@ -575,6 +577,15 @@ namespace hotel_santa_ursula_II.Migrations
                     b.Navigation("Habitaciones");
 
                     b.Navigation("pedido");
+                });
+
+            modelBuilder.Entity("hotel_santa_ursula_II.Models.Habitaciones", b =>
+                {
+                    b.HasOne("hotel_santa_ursula_II.Models.TipoHabitacion", "tipoHabitacion")
+                        .WithMany()
+                        .HasForeignKey("tipoHabitacionid");
+
+                    b.Navigation("tipoHabitacion");
                 });
 
             modelBuilder.Entity("hotel_santa_ursula_II.Models.Pedido", b =>

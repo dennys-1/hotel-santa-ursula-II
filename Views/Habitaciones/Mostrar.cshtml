@@ -36,10 +36,14 @@
                   <h5 class="card-title">@Html.DisplayFor(modelItem => item.numero)</h5>
                   
                   <p class="card-text">@Html.DisplayFor(modelItem => item.precio)</p>
-                
-                <a class="btn btn-primary" asp-action="Seleccionar" asp-route-id="@item.id">Agregar</a>
-
-
+                  <p class="card-text">@Html.DisplayFor(modelItem => item.Estado)</p>
+                  @if (item.Estado =="Ocupado" || item.Estado =="Reservado")
+                  {
+                      <p class="btn btn-primary">No disponible</p>
+                  }
+                  else{
+                     <a class="btn btn-primary" asp-action="Seleccionar" asp-route-id="@item.id">Agregar</a>
+                  }
                 </div>
               </div>
             </div>

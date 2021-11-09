@@ -66,25 +66,6 @@ namespace hotel_santa_ursula_II.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "T_habitaciones",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    idtipo = table.Column<int>(type: "integer", nullable: false),
-                    numero = table.Column<string>(type: "text", nullable: true),
-                    precio = table.Column<int>(type: "integer", nullable: false),
-                    descripcion = table.Column<string>(type: "text", nullable: true),
-                    nivel = table.Column<int>(type: "integer", nullable: false),
-                    Estado = table.Column<string>(type: "text", nullable: true),
-                    Imagen = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_T_habitaciones", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "T_pago",
                 columns: table => new
                 {
@@ -241,6 +222,81 @@ namespace hotel_santa_ursula_II.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "T_pedido",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserID = table.Column<string>(type: "text", nullable: true),
+                    Total = table.Column<int>(type: "integer", nullable: false),
+                    pagoId = table.Column<int>(type: "integer", nullable: true),
+                    Estado = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_T_pedido", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_T_pedido_T_pago_pagoId",
+                        column: x => x.pagoId,
+                        principalTable: "T_pago",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "T_habitaciones",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    numero = table.Column<string>(type: "text", nullable: true),
+                    precio = table.Column<int>(type: "integer", nullable: false),
+                    descripcion = table.Column<string>(type: "text", nullable: true),
+                    nivel = table.Column<int>(type: "integer", nullable: false),
+                    Estado = table.Column<string>(type: "text", nullable: true),
+                    Imagen = table.Column<string>(type: "text", nullable: true),
+                    tipoHabitacionid = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_T_habitaciones", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_T_habitaciones_T_tipo_habitacion_tipoHabitacionid",
+                        column: x => x.tipoHabitacionid,
+                        principalTable: "T_tipo_habitacion",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "t_detalle_pedido",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Habitacionesid = table.Column<int>(type: "integer", nullable: true),
+                    Cantidad = table.Column<int>(type: "integer", nullable: false),
+                    Precio = table.Column<int>(type: "integer", nullable: false),
+                    pedidoID = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_t_detalle_pedido", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_t_detalle_pedido_T_habitaciones_Habitacionesid",
+                        column: x => x.Habitacionesid,
+                        principalTable: "T_habitaciones",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_t_detalle_pedido_T_pedido_pedidoID",
+                        column: x => x.pedidoID,
+                        principalTable: "T_pedido",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "t_proforma",
                 columns: table => new
                 {
@@ -285,56 +341,6 @@ namespace hotel_santa_ursula_II.Migrations
                         name: "FK_T_reserva_T_habitaciones_Habitacionesid",
                         column: x => x.Habitacionesid,
                         principalTable: "T_habitaciones",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "T_pedido",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserID = table.Column<string>(type: "text", nullable: true),
-                    Total = table.Column<int>(type: "integer", nullable: false),
-                    pagoId = table.Column<int>(type: "integer", nullable: true),
-                    Estado = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_T_pedido", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_T_pedido_T_pago_pagoId",
-                        column: x => x.pagoId,
-                        principalTable: "T_pago",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "t_detalle_pedido",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Habitacionesid = table.Column<int>(type: "integer", nullable: true),
-                    Cantidad = table.Column<int>(type: "integer", nullable: false),
-                    Precio = table.Column<int>(type: "integer", nullable: false),
-                    pedidoID = table.Column<int>(type: "integer", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_t_detalle_pedido", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_t_detalle_pedido_T_habitaciones_Habitacionesid",
-                        column: x => x.Habitacionesid,
-                        principalTable: "T_habitaciones",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_t_detalle_pedido_T_pedido_pedidoID",
-                        column: x => x.pedidoID,
-                        principalTable: "T_pedido",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -387,6 +393,11 @@ namespace hotel_santa_ursula_II.Migrations
                 column: "pedidoID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_T_habitaciones_tipoHabitacionid",
+                table: "T_habitaciones",
+                column: "tipoHabitacionid");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_T_pedido_pagoId",
                 table: "T_pedido",
                 column: "pagoId");
@@ -432,9 +443,6 @@ namespace hotel_santa_ursula_II.Migrations
                 name: "T_reserva");
 
             migrationBuilder.DropTable(
-                name: "T_tipo_habitacion");
-
-            migrationBuilder.DropTable(
                 name: "T_usuarios");
 
             migrationBuilder.DropTable(
@@ -451,6 +459,9 @@ namespace hotel_santa_ursula_II.Migrations
 
             migrationBuilder.DropTable(
                 name: "T_pago");
+
+            migrationBuilder.DropTable(
+                name: "T_tipo_habitacion");
         }
     }
 }

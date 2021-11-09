@@ -1,0 +1,59 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    @if(UserManager.GetUserName(User).Equals("admin1@gmail.com" ))//contra Admin12.
+    {
+<ul>
+   <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Habitaciones" asp-action="Listar"> Habitaciones</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Contactanos" asp-action="Index"> CONTACTANOS</a>
+    </li>
+    <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">PRODUCTOS</a>
+    </li> 
+ </ul>
+}
+
+
+else{ 
+    <ul>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Habitaciones" asp-action="Mostrar"> Catalogo </a>
+    </li> 
+   <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Carrito" asp-action="Index"> Carrito </a>
+    </li> 
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">CONTACTANOS</a>
+    </li> 
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Habitaciones" asp-action="Mostrar"> CATÁLOGO </a>
+    </li> 
+
+   <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Nosotros"> NOSOTROS </a>
+    </li> 
+    </ul>
+
+ 
+}
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">CONTACTANOS</a>
+    </li> 
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Habitaciones" asp-action="Mostrar"> CATÁLOGO </a>
+    </li> 
+
+   <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Nosotros"> NOSOTROS </a>
+    </li> 
+
+}

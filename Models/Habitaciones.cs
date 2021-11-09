@@ -11,7 +11,7 @@ namespace hotel_santa_ursula_II.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
         public int id { get; set; }
-        public int idtipo { get; set; }
+        
 
         public string numero { get; set; }
 
@@ -23,6 +23,7 @@ namespace hotel_santa_ursula_II.Models
         public string Estado { get; set; }
         public string Imagen { get; set; }
         
+        public TipoHabitacion tipoHabitacion { get; set; }
 
     }
 }
